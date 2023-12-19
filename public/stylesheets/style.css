@@ -1,0 +1,16 @@
+body {
+    padding: 50px;
+    font: 14px 'Lucida Grande'
+}
+
+a {
+    color: #00b7ff
+}
+
+.text-azure-blue {
+    color: #0078d4
+}
+
+.bg-azure-light-gray {
+    background-color: #ebebeb;
+}
