@@ -1,15 +1,14 @@
 #!/usr/bin/env node
 
 // Module dependencies.
-
-var { getApp } = require('../app');
-var debug = require('debug')('todolist:server');
-var http = require('http');
+const { getApp } = require('../app');
+const debug = require('debug')('todolist:server');
+const http = require('http');
 
 // Create HTTP server.
 getApp().then((app) => {
-   var port = app.get('port');
-   var server = http.createServer(app);
+   const port = app.get('port');
+   const server = http.createServer(app);
 
    //  Listen on provided port, on all network interfaces.
    server.listen(port);
@@ -22,7 +21,7 @@ getApp().then((app) => {
          throw error;
       }
 
-      var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
+      const bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
 
       // handle specific listen errors with friendly messages
       switch (error.code) {
@@ -41,8 +40,8 @@ getApp().then((app) => {
 
    //   Event listener for HTTP server "listening" event.
    function onListening() {
-      var addr = server.address();
-      var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
+      const addr = server.address();
+      const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
       debug('Listening on ' + bind);
    }
 });
