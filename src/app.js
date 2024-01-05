@@ -1,74 +1,40 @@
-var createError = require('http-errors');
-var express = require('express');
-var mongoose = require('mongoose');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-const { format } = require('date-fns');
+import path from 'node:path';
+import process from 'process';
+import { fileURLToPath } from 'node:url';
 
-// 1st party dependencies
-var configData = require('./config/connection');
-var indexRouter = require('./routes/index');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-async function getApp() {
-   // Database
-   var connectionInfo = await configData.getConnectionInfo();
-   mongoose.connect(connectionInfo.DATABASE_URL);
+import express from 'express';
+import logger from 'morgan';
 
-   var app = express();
+// import the routers
+import { taskRouter } from './routes/task.js';
 
-   var port = normalizePort(process.env.PORT || '3000');
-   app.set('port', port);
+// initialize the database connection
+import './db/connect.js';
 
-   // view engine setup
-   app.set('views', path.join(__dirname, 'views'));
-   app.set('view engine', 'pug');
+// create an express application
+const app = express();
 
-   app.use(logger('dev'));
-   app.use(express.json());
-   app.use(express.urlencoded({ extended: false }));
-   app.use(cookieParser());
-   app.use(express.static(path.join(__dirname, 'public')));
+// set up the port information
+const port = process.env.PORT || 3000;
 
-   app.locals.format = format;
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
 
-   app.use('/', indexRouter);
-   app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js')); // redirect bootstrap JS
-   app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css')); // redirect CSS bootstrap
+// automatically parse incoming JSON to an object so we can access it in our request handlers
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-   // catch 404 and forward to error handler
-   app.use(function (req, res, next) {
-      next(createError(404));
-   });
+// create a logger middleware
+app.use(logger('dev'));
 
-   // error handler
-   app.use(function (err, req, res, next) {
-      // set locals, only providing error in development
-      res.locals.message = err.message;
-      res.locals.error = req.app.get('env') === 'development' ? err : {};
+// register the routers
+app.use(taskRouter);
 
-      // render the error page
-      res.status(err.status || 500);
-      res.render('error');
-   });
-
-   return app;
-}
-
-// Normalize a port into a number, string, or false.
-function normalizePort(val) {
-   const port = parseInt(val, 10);
-
-   if (isNaN(port)) {
-      // named pipe
-      return val;
-   }
-
-   if (port >= 0) {
-      // port number
-      return port;
-   }
-
-   return false;
-}
-module.exports = { getApp };
+// listen for connections
+app.listen(port, () => {
+   console.log(`Successfully started server running on port ${port}`);
+});
