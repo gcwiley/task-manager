@@ -14,4 +14,5 @@ function normalizePort(val) {
    return false;
 }
 
+// export the function
 export { normalizePort };
