@@ -9,6 +9,8 @@
       "sourceType": "module"
    },
    "rules": {
-      "semi": ["error", "always"]
+      "semi": ["error", "always"], // requires semicolons
+      "quotes": ["error", "single"], // requires single quotes
+      "arrow-parens": ["error", "always"] // requires parens around arrow functions
    }
 }
