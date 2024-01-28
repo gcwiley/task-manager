@@ -1,9 +1,10 @@
 import process from 'process';
 import express from 'express';
 import logger from 'morgan';
+import chalk from 'chalk';
 
 // import the routers
-import { taskRouter } from './routes/task.js';
+// import { taskRouter } from './routes/task.js';
 
 // initialize the database connection function
 import { connect } from './db/connect.js';
@@ -25,9 +26,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(logger('dev'));
 
 // register the routers
-app.use(taskRouter);
+// app.use(taskRouter);
 
 // listen for connections
 app.listen(port, () => {
-   console.log(`Successfully started server running on port ${port}`);
+   console.log(chalk.green(`Successfully started server running on port ${port}`));
 });
